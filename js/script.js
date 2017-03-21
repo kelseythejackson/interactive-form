@@ -43,21 +43,15 @@ titleSelection.addEventListener('change', ()=> {
 });
 
 
-
-
-
-// 
-log('this works');
 const colorOption = document.createElement('option');
 colorOption.value = 'default';
 colorOption.innerText = '-- Select a color --';
 colorOption.selected = true;
-// log(colorOption);
-// log(colorSelect.firstElementChild);
 colorSelect.style.visibility = 'hidden';
 colorSelect.previousElementSibling.style.visibility = 'hidden';
 colorSelect.insertBefore(colorOption, colorSelect.firstElementChild);
 
+// Makes the color select dynamic
 designSelect.addEventListener('change', ()=> {
     let dynamicSelect = '';
    if(designSelect.value !== 'js puns'){
@@ -66,7 +60,6 @@ designSelect.addEventListener('change', ()=> {
             color.style.display = 'block';
             if(color.innerText.includes('Puns')) {
                 color.style.display = 'none';
-                // log(color);
             }
         }
         
@@ -76,30 +69,17 @@ designSelect.addEventListener('change', ()=> {
     for(let color of colors) {
             color.style.display = 'block';
             if(color.innerText.includes('I')) {
-                // log('puns');
                 color.style.display = 'none';
-                // log(color);
             }
-            
         }
-
-    
    }
-        
-        
-    
-  colorSelect.style.visibility = 'visible';
-colorSelect.previousElementSibling.style.visibility = 'visible';
-
-
-
-        
-    
+    colorSelect.style.visibility = 'visible';
+    colorSelect.previousElementSibling.style.visibility = 'visible';
 });
 
 // Register for an activity
 const activitySection = document.querySelector('.activities');
-log(activitySection);
+
 
 const conferenceTotal = document.createElement('div');
 let conferencePrice = 0;
@@ -109,25 +89,26 @@ activitySection.addEventListener('change', (e)=> {
     if(e.target.type === 'checkbox') {
         let val = e.target.value;
         if(e.target.checked === true) {
-            log('checked');
+
             conferencePrice += parseInt(e.target.value);
-            log('Total Price: ' + conferencePrice);
+
             conferenceTotal.innerText = 'Total price: ' + conferencePrice;
             activitySection.appendChild(conferenceTotal);
         } else {
-            log('unchecked');
+
             conferencePrice -= e.target.value;
-            log('Total Price: ' + conferencePrice);
+
             conferenceTotal.innerText = 'Total price: ' + conferencePrice;
         }
     }
 });
 
+
+// Dynamically shows the payment section based on what the user chooses
 paymentSection.lastElementChild.classList.add('hide');
 paymentSection.lastElementChild.previousElementSibling.classList.add('hide');
 paymentSection.addEventListener('change', (e)=> {
    if(e.target.value === 'credit card') {
-       // log(e.target.value);
        creditCardDiv.classList.remove('hide');
        paymentSection.lastElementChild.classList.add('hide');
        paymentSection.lastElementChild.previousElementSibling.classList.add('hide');
@@ -142,9 +123,7 @@ paymentSection.addEventListener('change', (e)=> {
    }
 });
 
-
-log(paymentSection);
-
+// Error validation for the Name, Email, Activities and payment sections
 paymentForm.addEventListener('submit', (e)=>{
     if(nameInput.value === '') {
         e.preventDefault();
@@ -162,28 +141,46 @@ paymentForm.addEventListener('submit', (e)=>{
         log('no activities selected');
         activitySection.firstElementChild.classList.add('error-text');
     }
+    if(!creditCardDiv.classList.contains('hide')) {
+        if(ccNumberInput.value.length === 0) {
+            e.preventDefault();
+            log('number must not zero');
+            ccNumberInput.classList.add('error');
+            ccNumberInput.value = 'number must not zero';
+        } else if (ccNumberInput.value.length <= 1 || ccNumberInput.value.length < 13) {
+            e.preventDefault();
+            log('number must not be less than 13 characters');
+            ccNumberInput.value = 'number must be at least 13 characters';
+            ccNumberInput.classList.add('error');
+        } else if (ccNumberInput.value.length > 16) {
+            e.preventDefault();
+            log('number must not be more than 16 characters');
+            ccNumberInput.value = 'only 16 characters please';
+            ccNumberInput.classList.add('error');
 
-    if(ccNumberInput.value.length < 13) {
-        e.preventDefault();
-        log('number must not be less than 13 characters');
-        ccNumberInput.classList.add('error');
-    } else if (ccNumberInput.value.length > 16) {
-        e.preventDefault();
-        log('number must not be more than 16 characters');
-        ccNumberInput.classList.add('error');
-    }
+        }
+        if(ccZip.value.length !== 5) {
+            e.preventDefault();
+            log('number can only be 5 characters');
+            ccZip.classList.add('error');
+        }
 
-    if(ccZip.value.length !== 5) {
-        e.preventDefault();
-        log('number can only be 5 characters');
-        ccZip.classList.add('error');
-    }
-
-    if(cvv.value.length !== 3) {
-        e.preventDefault();
-        log('cvv can only be 3 numbers');
-        cvv.classList.add('error');
+        if(cvv.value.length !== 3) {
+            e.preventDefault();
+            log('cvv can only be 3 numbers');
+            cvv.classList.add('error');
+        }
     }
 
 });
 
+//Checks the email field until it has the proper format
+emailInput.addEventListener('keyup', ()=>{
+    if(!emailInput.value.includes('@') || !emailInput.value.includes('.')) {
+        emailInput.style.borderColor = 'red';
+        log('email is not properly formatted');
+
+    } else {
+        emailInput.style.borderColor = '';
+    }
+});
