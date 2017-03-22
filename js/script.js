@@ -12,6 +12,7 @@ const log = (statement) => console.log(statement),
       cvv = document.getElementById('cvv'),
       noJsLabel = document.querySelector('label[for=other-title]'),
       noJsInput = document.querySelector('input#other-title'),
+      checkboxes = document.querySelectorAll('.activities label');
       creditCardDiv = document.getElementById('credit-card');
 
 
@@ -85,11 +86,78 @@ const conferenceTotal = document.createElement('div');
 let conferencePrice = 0;
 conferenceTotal.classList = 'conference-total';
 
+// for(let checkbox of checkboxes) {
+//     if (checkbox.innerText.includes('9am')) {
+//         log(checkbox.innerText);
+//     }
+// }
+
+checkboxes[1].addEventListener('change', ()=> {
+    if(checkboxes[1].firstElementChild.checked === true) {
+        checkboxes[3].firstElementChild.disabled = true;
+        checkboxes[5].firstElementChild.disabled = true;
+    } else {
+        checkboxes[3].firstElementChild.disabled = false;
+        checkboxes[5].firstElementChild.disabled = false;
+    }
+});
+
+checkboxes[3].addEventListener('change', ()=> {
+    if(checkboxes[3].firstElementChild.checked === true) {
+        checkboxes[1].firstElementChild.disabled = true;
+        checkboxes[5].firstElementChild.disabled = true;
+    } else {
+        checkboxes[1].firstElementChild.disabled = false;
+        checkboxes[5].firstElementChild.disabled = false;
+    }
+});
+
+checkboxes[5].addEventListener('change', ()=> {
+    if(checkboxes[5].firstElementChild.checked === true) {
+        checkboxes[1].firstElementChild.disabled = true;
+        checkboxes[3].firstElementChild.disabled = true;
+    } else {
+        checkboxes[1].firstElementChild.disabled = false;
+        checkboxes[3].firstElementChild.disabled = false;
+    }
+});
+
+
+checkboxes[2].addEventListener('change', ()=> {
+    if(checkboxes[2].firstElementChild.checked === true) {
+        checkboxes[4].firstElementChild.disabled = true;
+        checkboxes[6].firstElementChild.disabled = true;
+    } else {
+        checkboxes[4].firstElementChild.disabled = false;
+        checkboxes[6].firstElementChild.disabled = false;
+    }
+});
+
+checkboxes[4].addEventListener('change', ()=> {
+    if(checkboxes[4].firstElementChild.checked === true) {
+        checkboxes[2].firstElementChild.disabled = true;
+        checkboxes[6].firstElementChild.disabled = true;
+    } else {
+        checkboxes[2].firstElementChild.disabled = false;
+        checkboxes[6].firstElementChild.disabled = false;
+    }
+});
+
+
+checkboxes[6].addEventListener('change', ()=> {
+    if(checkboxes[6].firstElementChild.checked === true) {
+        checkboxes[4].firstElementChild.disabled = true;
+        checkboxes[2].firstElementChild.disabled = true;
+    } else {
+        checkboxes[4].firstElementChild.disabled = false;
+        checkboxes[2].firstElementChild.disabled = false;
+    }
+});
 activitySection.addEventListener('change', (e)=> {
     if(e.target.type === 'checkbox') {
+
         let val = e.target.value;
         if(e.target.checked === true) {
-
             conferencePrice += parseInt(e.target.value);
 
             conferenceTotal.innerText = 'Total price: ' + conferencePrice;
