@@ -12,8 +12,9 @@ const log = (statement) => console.log(statement),
       cvv = document.getElementById('cvv'),
       noJsLabel = document.querySelector('label[for=other-title]'),
       noJsInput = document.querySelector('input#other-title'),
-      checkboxes = document.querySelectorAll('.activities label');
-      creditCardDiv = document.getElementById('credit-card');
+      checkboxes = document.querySelectorAll('.activities label'),
+      creditCardDiv = document.getElementById('credit-card'),
+      firstFieldset = document.getElementsByTagName('FIELDSET')[0];
 
 
 
@@ -28,7 +29,7 @@ nameInput.focus();
 
 // If 'Other' is selected for the job role, an 'other title' text fiels is revealed
 titleSelection.addEventListener('change', ()=> {
-    const firstFieldset = document.getElementsByTagName('FIELDSET')[0];
+
     if(titleSelection.value.toLowerCase() === 'other') {
         const otherJobRoleInput = document.createElement('input'),
               otherJobRoleLabel = document.createElement('label');
@@ -40,6 +41,14 @@ titleSelection.addEventListener('change', ()=> {
         otherJobRoleLabel.htmlFor = 'other-title-js';
         firstFieldset.appendChild(otherJobRoleLabel);
         firstFieldset.appendChild(otherJobRoleInput);
+    } else {
+        if(firstFieldset.lastElementChild.tagName === 'INPUT') {
+            firstFieldset.removeChild(firstFieldset.lastElementChild.previousElementSibling);
+            firstFieldset.removeChild(firstFieldset.lastElementChild);
+        }
+
+
+
     }
 });
 
@@ -86,73 +95,42 @@ const conferenceTotal = document.createElement('div');
 let conferencePrice = 0;
 conferenceTotal.classList = 'conference-total';
 
-// for(let checkbox of checkboxes) {
-//     if (checkbox.innerText.includes('9am')) {
-//         log(checkbox.innerText);
-//     }
-// }
 
 checkboxes[1].addEventListener('change', ()=> {
     if(checkboxes[1].firstElementChild.checked === true) {
         checkboxes[3].firstElementChild.disabled = true;
-        checkboxes[5].firstElementChild.disabled = true;
     } else {
         checkboxes[3].firstElementChild.disabled = false;
-        checkboxes[5].firstElementChild.disabled = false;
     }
 });
 
 checkboxes[3].addEventListener('change', ()=> {
     if(checkboxes[3].firstElementChild.checked === true) {
         checkboxes[1].firstElementChild.disabled = true;
-        checkboxes[5].firstElementChild.disabled = true;
     } else {
         checkboxes[1].firstElementChild.disabled = false;
-        checkboxes[5].firstElementChild.disabled = false;
     }
 });
-
-checkboxes[5].addEventListener('change', ()=> {
-    if(checkboxes[5].firstElementChild.checked === true) {
-        checkboxes[1].firstElementChild.disabled = true;
-        checkboxes[3].firstElementChild.disabled = true;
-    } else {
-        checkboxes[1].firstElementChild.disabled = false;
-        checkboxes[3].firstElementChild.disabled = false;
-    }
-});
-
 
 checkboxes[2].addEventListener('change', ()=> {
     if(checkboxes[2].firstElementChild.checked === true) {
         checkboxes[4].firstElementChild.disabled = true;
-        checkboxes[6].firstElementChild.disabled = true;
     } else {
         checkboxes[4].firstElementChild.disabled = false;
-        checkboxes[6].firstElementChild.disabled = false;
+
     }
 });
 
 checkboxes[4].addEventListener('change', ()=> {
     if(checkboxes[4].firstElementChild.checked === true) {
         checkboxes[2].firstElementChild.disabled = true;
-        checkboxes[6].firstElementChild.disabled = true;
     } else {
         checkboxes[2].firstElementChild.disabled = false;
-        checkboxes[6].firstElementChild.disabled = false;
+
     }
 });
 
 
-checkboxes[6].addEventListener('change', ()=> {
-    if(checkboxes[6].firstElementChild.checked === true) {
-        checkboxes[4].firstElementChild.disabled = true;
-        checkboxes[2].firstElementChild.disabled = true;
-    } else {
-        checkboxes[4].firstElementChild.disabled = false;
-        checkboxes[2].firstElementChild.disabled = false;
-    }
-});
 activitySection.addEventListener('change', (e)=> {
     if(e.target.type === 'checkbox') {
 
@@ -191,39 +169,53 @@ paymentSection.addEventListener('change', (e)=> {
    }
 });
 
+
+
 // Error validation for the Name, Email, Activities and payment sections
 paymentForm.addEventListener('submit', (e)=>{
     if(nameInput.value === '') {
         e.preventDefault();
         log('name can\'t be blank');
         nameInput.classList.add('error');
+        nameInput.placeholder = 'name can\'t be blank';
+    } else {
+            nameInput.classList.remove('error');
     }
     if(!emailInput.value.includes('@') || !emailInput.value.includes('.')) {
         e.preventDefault();
         log('email is not properly formatted');
         emailInput.classList.add('error');
+        emailInput.placeholder = 'email is not properly formatted';
+    } else {
+        emailInput.classList.remove('error');
     }
 
     if(conferencePrice === 0) {
         e.preventDefault();
         log('no activities selected');
         activitySection.firstElementChild.classList.add('error-text');
+
+    } else {
+        activitySection.firstElementChild.classList.remove('error-text');
     }
     if(!creditCardDiv.classList.contains('hide')) {
         if(ccNumberInput.value.length === 0) {
             e.preventDefault();
             log('number must not zero');
             ccNumberInput.classList.add('error');
-            ccNumberInput.value = 'number must not zero';
+            ccNumberInput.value = '';
+            ccNumberInput.placeholder = 'number must not zero';
         } else if (ccNumberInput.value.length <= 1 || ccNumberInput.value.length < 13) {
             e.preventDefault();
             log('number must not be less than 13 characters');
-            ccNumberInput.value = 'number must be at least 13 characters';
+            ccNumberInput.value = '';
+            ccNumberInput.placeholder = 'number must be at least 13 characters';
             ccNumberInput.classList.add('error');
         } else if (ccNumberInput.value.length > 16) {
             e.preventDefault();
             log('number must not be more than 16 characters');
-            ccNumberInput.value = 'only 16 characters please';
+            ccNumberInput.value = '';
+            ccNumberInput.placeholder = 'only 16 characters please';
             ccNumberInput.classList.add('error');
 
         }
@@ -231,12 +223,20 @@ paymentForm.addEventListener('submit', (e)=>{
             e.preventDefault();
             log('number can only be 5 characters');
             ccZip.classList.add('error');
+            ccZip.value = '';
+            ccZip.placeholder = 'enter a zip code'
+        } else {
+            ccZip.classList.remove('error');
         }
 
         if(cvv.value.length !== 3) {
             e.preventDefault();
             log('cvv can only be 3 numbers');
             cvv.classList.add('error');
+            cvv.value = '';
+            cvv.placeholder = 'enter a ccv #';
+        } else {
+            cvv.classList.remove('error');
         }
     }
 
@@ -245,10 +245,10 @@ paymentForm.addEventListener('submit', (e)=>{
 //Checks the email field until it has the proper format
 emailInput.addEventListener('keyup', ()=>{
     if(!emailInput.value.includes('@') || !emailInput.value.includes('.')) {
-        emailInput.style.borderColor = 'red';
+        emailInput.classList.add('error');
         log('email is not properly formatted');
 
     } else {
-        emailInput.style.borderColor = '';
+        emailInput.classList.remove('error');
     }
 });

@@ -185,8 +185,10 @@ button:hover {
 }
 
 .error {
-	border: 1px solid red;
+	border: 2px solid red !important;
 }
+
+
 
 .error-text {
 	color: red;
